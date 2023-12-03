@@ -1,15 +1,15 @@
 module Main where
     -- ([[state, color]], [[alabama, georgia]], [blue, red]) -> [[alabama, red]]
-    states :: ([[String, String]], [[String]], [String]) -> [[String, String]]
+    states :: ([(String, String)], [[String]], [String]) -> [(String, String)]
     states (pairs, [], _) = pairs
-    states (pairs, (neigh_states:other_neigh_states), colors) = states(match_colors(pairs, neigh_states, colors), other_neigh_states, color)
+    states (pairs, (neigh_states:other_neigh_states), colors) = states(match_colors(pairs, neigh_states, colors), other_neigh_states, colors) ++ pairs
 
     -- ([[state, color]], [alabama, georgie], [blue, red]) -> [[alabama, red]]
-    match_colors :: ([[String, String]], [String], [String]) -> [[String, String]]
-    match_colors = ([[]], [[]], _) = []
-    match_colors = ([[]], (state:states), (color:colors)) = ([state, color]:match_colors(states, colors))
-    match_colors = (((pState, pColor):pairs), [states, colors]) 
-        | within(currPair, states) == True = match_colors(pairs, remove_state(pState, curr_pair), remove_color(pColor, colors))
+    match_colors :: ([(String, String)], [String], [String]) -> [(String, String)]
+    match_colors ([], [], _) = []
+    match_colors ([], (state:states), (color:colors)) = ((state, color):match_colors([], states, colors))
+    match_colors (((pState, pColor):pairs), states, colors) 
+        | within(pState, states) == True = match_colors(pairs, remove(pState, states), remove(pColor, colors))
         | otherwise = match_colors(pairs, states, colors)
 
 
@@ -19,13 +19,13 @@ module Main where
     --     | state == pState = find_dup_states
     --     | otherwise = []
 
-    remove_color :: (String, [String]) -> [String]
-    remove_color(_, []) = []
-    remove_color(color, (h:t))
-        | color == h = t
-        | otherwise = h : remove_color(color, t)
+    remove :: (String, [String]) -> [String]
+    remove(_, []) = []
+    remove(to_remove, (h:t))
+        | to_remove == h = t
+        | otherwise = h : remove(to_remove, t)
 
-    within :: (String, [String]) -> Boolean
+    within :: (String, [String]) -> Bool
     within (_, []) = False
     within (pState, (currState:states))
         | pState == currState = True
