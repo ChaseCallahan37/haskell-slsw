@@ -1,10 +1,8 @@
 module Main where
-    -- ([[state, color]], [[alabama, georgia]], [blue, red]) -> [[alabama, red]]
     states :: ([(String, String)], [[String]], [String]) -> [(String, String)]
     states (pairs, [], _) = pairs
     states (pairs, (neigh_states:other_neigh_states), colors) = states(match_colors(pairs, neigh_states, colors), other_neigh_states, colors) ++ pairs
 
-    -- ([[state, color]], [alabama, georgie], [blue, red]) -> [[alabama, red]]
     match_colors :: ([(String, String)], [String], [String]) -> [(String, String)]
     match_colors ([], [], _) = []
     match_colors ([], (state:states), (color:colors)) = ((state, color):match_colors([], states, colors))
@@ -12,12 +10,6 @@ module Main where
         | within(pState, states) == True = match_colors(pairs, remove(pState, states), remove(pColor, colors))
         | otherwise = match_colors(pairs, states, colors)
 
-
-    -- find_dup_states :: ([String, String], [[String], [String]]) -> [[String], [String]]
-    -- find_dup_states (pair, [], _) = []
-    -- find_dup_states ([pState, pColor], [(state:states), colors]) = 
-    --     | state == pState = find_dup_states
-    --     | otherwise = []
 
     remove :: (String, [String]) -> [String]
     remove(_, []) = []

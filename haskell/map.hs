@@ -1,0 +1,8 @@
+module Main where
+
+    squareAll list = map square list
+        where square x = x * x
+
+    main :: IO()
+    main = do
+        putStrLn "hello"
